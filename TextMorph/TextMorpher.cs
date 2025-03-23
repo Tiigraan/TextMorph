@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace TextMorph;
 
 public class TextMorpher
@@ -15,5 +17,26 @@ public class TextMorpher
     }
 
     public string Morph(string text)
-        => throw new NotImplementedException();
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        var textSpan = text.AsSpan();
+        var builder = new StringBuilder();
+        var lastMathEnd = 0;
+        
+        for (var i = 0; i < textSpan.Length; i++)
+        {
+            if (!_trie.TryGetFirstMatch(textSpan[i..], out var subKey, out var value))
+                continue;
+            
+            builder.Append(textSpan[lastMathEnd..i]);
+            builder.Append(value);
+            lastMathEnd = i + subKey.Length;
+            i = lastMathEnd - 1;
+        }
+        
+        builder.Append(textSpan[lastMathEnd..]);
+        
+        return builder.ToString();
+    }
 }
