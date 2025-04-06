@@ -1,6 +1,6 @@
 namespace TextMorph.Tests;
 
-public class TextMorpherTests
+public class HasMappingTests
 {
     [Fact]
     public void HasMapping_KeyExists_ReturnsTrue()
