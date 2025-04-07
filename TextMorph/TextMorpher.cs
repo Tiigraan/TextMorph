@@ -2,9 +2,10 @@ using System.Text;
 
 namespace TextMorph;
 
-public class TextMorpher
+public class TextMorpher(
+    bool caseInsensitive = false)
 {
-    private readonly Trie _trie = new ();
+    private readonly Trie _trie = new (caseInsensitive);
     
     public void AddMapping(string key, string value)
         => _trie.Add(key, value);

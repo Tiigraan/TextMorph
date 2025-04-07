@@ -2,7 +2,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace TextMorph;
 
-internal class Trie
+internal class Trie(
+    bool caseInsensitive = false)
 {
     // ToDo This field used only in root node, need optimize?
     private readonly Dictionary<char, uint> _alphabet = new();
@@ -19,7 +20,7 @@ internal class Trie
             var index = ToIndex(letter);
             if (!node._next.ContainsKey(index))
             {
-                node._next[index] = new Trie();
+                node._next[index] = new Trie(caseInsensitive);
             }
             
             node = node._next[index];
@@ -69,12 +70,16 @@ internal class Trie
         }
 
         value = node._value;
+        subKey = word.ToString();
         
         return value is not null;
     }
     
     private uint ToIndex(char letter)
     {
+        if (caseInsensitive)
+            letter = char.ToUpperInvariant(letter);
+        
         if (_alphabet.TryGetValue(letter, out var index)) 
             return index;
         
